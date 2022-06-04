@@ -34,9 +34,24 @@ db.sequelize = sequelize
 
 db.user = require('./userModel.js')(sequelize, DataTypes)
 db.employee = require('./employeeModel.js')(sequelize, DataTypes)
+db.country = require('./countryModel.js')(sequelize, DataTypes)
+db.city = require('./cityModel.js')(sequelize, DataTypes)
 
-db.sequelize.sync({force: true})
+
+const masterdata = async () => {
+    db.country.create({
+        name: 'Saudi Arabia', code: 'SA', status: 1,
+    });
+
+    db.city.create({
+            name: "Riyadh", status: 1, country_id: 1
+    });
+
+};
+
+db.sequelize.sync() // force true will drop existing table data
 .then(()=>{
+    // masterdata();
     console.log('yes re sync DONE !')
 })
 
@@ -49,6 +64,16 @@ db.employee.hasMany(db.user,{
 db.user.belongsTo(db.employee, {
     foreignKey: 'employee_id',
     as: 'employee'
+})
+
+db.city.belongsTo(db.country, {
+    foreignKey: 'country_id',
+    as: 'country'
+})
+
+db.country.hasMany(db.city, {
+    foreignKey: 'country_id',
+    as: 'city'
 })
 
 module.exports = db

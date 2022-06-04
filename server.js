@@ -18,8 +18,10 @@ app.use(express.urlencoded({extended: true}))
 // routers
 const castRouter = require('./routes/userRouter')
 const employeeRouter = require('./routes/employeeRouter')
+const countryRouter = require('./routes/countryRouter')
 app.use('/api/cast', castRouter)
 app.use('/api/employee', employeeRouter)
+app.use('/api/country', countryRouter)
 
 
 app.get('/', (req, res) =>{
