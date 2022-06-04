@@ -1,13 +1,13 @@
 const db = require('../models')
 
 const Country = db.country
+const City = db.city
 
 
 const getAllCountrys = async (req, res) =>{
     let countries = await Country.findAll({
         attributes: { exclude: ['createdAt', 'updatedAt', 'status'] }
     })
-    console.log(countries)
     res.status(200).send(countries)
 }
 
@@ -18,8 +18,19 @@ const getCountry = async (req,res) =>{
     res.status(200).send(country)
 }
 
+const getAllCitiesOfCountry = async (req, res) =>{
+    let id = req.params.id
+    let cities = await City.findAll({ 
+        where: {country_id: id},
+        attributes: { exclude: ['createdAt', 'updatedAt', 'status'] }},
+        )
+    res.status(200).send(cities)
+}
+
+
 
 module.exports ={
     getAllCountrys,
-    getCountry
+    getCountry,
+    getAllCitiesOfCountry
 }
