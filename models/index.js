@@ -49,7 +49,7 @@ const masterdata = async () => {
 
 };
 
-db.sequelize.sync() // force true will drop existing table data
+db.sequelize.sync( {force: true}) // force true will drop existing table data
 .then(()=>{
     // masterdata();
     console.log('yes re sync DONE !')
