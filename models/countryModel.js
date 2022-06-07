@@ -4,11 +4,15 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
-        code: {
+        iso2: {
             type: DataTypes.STRING,
             allowNull: false
         },
-        status: {
+        iso3: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        isActive: {
             type: DataTypes.BOOLEAN,
             allowNull: false
         }

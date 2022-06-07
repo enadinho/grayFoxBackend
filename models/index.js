@@ -38,20 +38,19 @@ db.country = require('./countryModel.js')(sequelize, DataTypes)
 db.city = require('./cityModel.js')(sequelize, DataTypes)
 
 
-const masterdata = async () => {
+const testdata = async () => {
     db.country.create({
-        name: 'Saudi Arabia', code: 'SA', status: 1,
+        name: 'Saudi Arabia', iso2: 'SA', iso3: 'KSA', isActive: 1,
     });
 
     db.city.create({
             name: "Riyadh", status: 1, country_id: 1
     });
-
 };
 
 db.sequelize.sync( {force: true}) // force true will drop existing table data
 .then(()=>{
-    // masterdata();
+    testdata();
     console.log('yes re sync DONE !')
 })
 
