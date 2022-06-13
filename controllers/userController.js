@@ -1,3 +1,4 @@
+const { regexpToText } = require('nodemon/lib/utils')
 const db = require('../models')
 
 const Cast = db.user
@@ -6,17 +7,22 @@ const Employee = db.employee
 
 const addCast = async(req, res) =>{
     let info ={
-        name: req.body.name,
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
         national: req.body.national,
+        mobile: req.body.mobile,
+        bodytype: req.body.bodytype,
         mobile: req.body.mobile,
         city: req.body.city,
         talent: req.body.talent,
         height: req.body.height,
-        width: req.body.width,
+        weight: req.body.weight,
+        workshops: req.body.workshops,
         gender: req.body.gender,
         image: req.body.image,
-        photo_session: req.body.photo_session,
-        field_19: req.body.field_19,
+        experience: req.body.experience,
+        birthday: req.body.birthday,
+        email: req.body.email,
         isActive: req.body.isActive ? req.body.isActive : false
     }
 
