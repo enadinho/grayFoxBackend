@@ -1,6 +1,7 @@
 const dbConfig = require('../config/dbConfig.js')
 
 const {Sequelize, DataTypes} =require('sequelize')
+const bcryptjs = require('bcryptjs')
 const sequelize = new Sequelize(
     dbConfig.DB,
     dbConfig.USER,
@@ -39,13 +40,26 @@ db.city = require('./cityModel.js')(sequelize, DataTypes)
 
 
 const testdata = async () => {
-    db.country.create({
-        name: 'Saudi Arabia', iso2: 'SA', iso3: 'KSA', isActive: 1,
-    });
+    
+    encryptedPassword = await bcryptjs.hash("test@123", 10);
 
-    db.city.create({
-            name: "Riyadh", status: 1, country_id: 1
-    });
+    db.employee.create({
+        first_name: "Test", last_name: "User", email: "testuser@gmail.com", password: encryptedPassword
+    })
+    // db.country.create({
+    //     name: 'Saudi Arabia', iso2: 'SA', iso3: 'KSA', isActive: 1,
+    //     city: {
+    //         name: "Riyadh", status: 1
+    //     }
+    // }, {
+    //     include: [{
+    //       association: city,
+    //     }]
+    // });
+
+    // db.city.create({
+    //         name: "Riyadh", status: 1, country_id: 1
+    // });
 };
 
 db.sequelize.sync( {force: true}) // force true will drop existing table data

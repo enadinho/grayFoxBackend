@@ -34,15 +34,28 @@ const login = async (req, res)=> {
       employee.token = token;
 
       // user
+      req.session.token = token;
       res.status(200).json(employee);
     }
     else{
         res.status(400).send("Invalid Credentials");
     }
   } catch (err) {
-    console.log(err);
+    return res.status(500).send({ message: "Server Error" });
   }
 }
+
+const logout = async (req, res) => {
+  try {
+    req.session = null;
+    return res.status(200).send({
+      message: "You've been signed out!"
+    });
+  } catch (err) {
+    this.next(err);
+  }
+}
+
 
 const register = async (req, res) => {
   try {
@@ -129,6 +142,7 @@ const deleteEmployee = async (req,res) =>{
 
 module.exports ={
     login,
+    logout,
     register,
     addEmployee,
     getAllEmployees,
