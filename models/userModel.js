@@ -1,6 +1,10 @@
 module.exports = (sequelize, DataTypes) => {
     const Cast = sequelize.define('cast', {
-        name: {
+        firstname: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        lastname: {
             type: DataTypes.STRING,
             allowNull: false
         },
@@ -24,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
-        width: {
+        weight: {
             type: DataTypes.STRING,
             allowNull: false
         },
@@ -36,11 +40,23 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
-        photo_session: {
+        bodytype: {
             type: DataTypes.STRING,
             allowNull: false
         },
-        field_19: {
+        email: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        workshops: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        experience: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        birthday: {
             type: DataTypes.STRING,
             allowNull: false
         },
