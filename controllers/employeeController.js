@@ -4,12 +4,20 @@ const db = require('../models')
 
 const Employee = db.employee
 
+var signOptions = {
+  issuer:  'i',
+  subject:  's',
+  audience:  'a',
+  expiresIn:  "12h",
+  algorithm:  "HS256"
+ };
 
 const login = async (req, res)=> {
   try {
     // Get user input
     const { email, password } = req.body;
-
+    console.log(email)
+    
     // Validate user input
     if (!(email && password)) {
       res.status(400).send("All input is required");
@@ -23,11 +31,12 @@ const login = async (req, res)=> {
     else if (employee && (await bcrypt.compare(password, employee.password))) {
       // Create token
       const token = jsonwebtoken.sign(
-        { user_id: employee._id, email },
+        { userid: employee._id, username: email },
         process.env.TOKEN_KEY,
         {
           expiresIn: process.env.TOKEN_KEY_EXPIRY,
-        }
+        },
+        signOptions
       );
 
       // save user token
@@ -45,6 +54,18 @@ const login = async (req, res)=> {
     //return res.status(500).send({ message: "Server Error" });
   }
 }
+
+const profile = async (req, res) => {
+  try {
+      // res.header("Access-Control-Allow-Origin", "http://localhost:4200");
+      // res.header('Access-Control-Allow-Credentials', true);
+      // res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+      return res.status(200).send(req.user);
+  } catch (err) {
+    this.next(err);
+  }
+}
+
 
 const logout = async (req, res) => {
   try {
@@ -143,6 +164,7 @@ const deleteEmployee = async (req,res) =>{
 
 module.exports ={
     login,
+    profile,
     logout,
     register,
     addEmployee,
