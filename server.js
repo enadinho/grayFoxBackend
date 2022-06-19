@@ -6,7 +6,9 @@ const app = express()
 const cookieSession = require('cookie-session');
 
 var corOptions = {
-    origin: 'http://localhost:4200'
+    origin: 'http://localhost:4200',
+    optionsSuccessStatus: 200,
+    credentials: true
 }
 
 
@@ -18,9 +20,10 @@ app.use(
     cookieSession({
       name: "grayfox-session",
       secret: "COOKIE_SECRET", // should use as secret environment variable
-      httpOnly: true
+      httpOnly: true,
+      sameSite: 'strict'
     })
-  );
+);
 
 // routers
 const castRouter = require('./routes/userRouter')
