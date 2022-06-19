@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs/dist/bcrypt');
 const jsonwebtoken = require('jsonwebtoken');
+const { user } = require('../models');
 const db = require('../models')
 
 const Employee = db.employee
@@ -23,7 +24,10 @@ const login = async (req, res)=> {
       res.status(400).send("All input is required");
     }
     // Validate if user exist in our database
-    const employee = await Employee.findOne({ where: {email: email} });
+    const employee = await Employee.findOne({ 
+      where: {email: email},
+      attributes: { exclude: ['token'] },
+    });
 
     if(!employee){
         res.status(400).send("Employee not found, Please Register"); 
@@ -31,7 +35,7 @@ const login = async (req, res)=> {
     else if (employee && (await bcrypt.compare(password, employee.password))) {
       // Create token
       const token = jsonwebtoken.sign(
-        { userid: employee._id, username: email },
+        { userid: employee.id, username: email },
         process.env.TOKEN_KEY,
         {
           expiresIn: process.env.TOKEN_KEY_EXPIRY,
@@ -40,8 +44,8 @@ const login = async (req, res)=> {
       );
 
       // save user token
-      employee.token = token;
-
+      // employee.token = token;
+      Employee.update({token: token}, { where:{ id : employee.id } })
       // user
       req.session.token = token;
       res.status(200).json(employee);
@@ -50,18 +54,21 @@ const login = async (req, res)=> {
         res.status(400).send("Invalid Credentials");
     }
   } catch (err) {
+    console.log(err)
     return res.status(500).send({ message: "Server Error" });
   }
 }
 
 const profile = async (req, res) => {
   try {
-      // res.header("Access-Control-Allow-Origin", "http://localhost:4200");
-      // res.header('Access-Control-Allow-Credentials', true);
-      // res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-      return res.status(200).send(req.user);
+      console.log(req.user);
+      const employee = await Employee.findOne({ 
+        where: {email: req.user.username},
+        attributes: { exclude: ['token', 'password'] },
+       });
+      return res.status(200).send(employee);
   } catch (err) {
-    this.next(err);
+   console.log(err);
   }
 }
 
