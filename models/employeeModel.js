@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
         email: { type: DataTypes.STRING, unique: true },
         password: { type: DataTypes.STRING },
         token: { type: DataTypes.STRING },
+        active: {type: DataTypes.BOOLEAN }
     })
 
     return Employee

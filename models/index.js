@@ -44,7 +44,7 @@ const testdata = async () => {
     encryptedPassword = await bcryptjs.hash("test@123", 10);
 
     db.employee.create({
-        first_name: "Test", last_name: "User", email: "testuser@gmail.com", password: encryptedPassword
+        first_name: "Test", last_name: "User", email: "testuser@gmail.com", password: encryptedPassword, active: true
     })
     // db.country.create({
     //     name: 'Saudi Arabia', iso2: 'SA', iso3: 'KSA', isActive: 1,

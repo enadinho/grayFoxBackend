@@ -142,7 +142,9 @@ const addEmployee = async(req, res) =>{
 
 
 const getAllEmployees = async (req, res) =>{
-    let employees = await Employee.findAll({})
+    let employees = await Employee.findAll({
+      attributes: { exclude: ['token', 'password']}
+    })
     res.status(200).send(employees)
 }
 
