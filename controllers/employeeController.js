@@ -26,7 +26,7 @@ const login = async (req, res)=> {
     // Validate if user exist in our database
     const employee = await Employee.findOne({ 
       where: {email: email},
-      attributes: { exclude: ['token'] },
+      attributes: { exclude: ['token', 'createdAt', 'updatedAt'] },
     });
 
     if(!employee){
@@ -35,7 +35,9 @@ const login = async (req, res)=> {
     else if (employee && (await bcrypt.compare(password, employee.password))) {
       // Create token
       const token = jsonwebtoken.sign(
-        { userid: employee.id, username: email },
+        { 
+          username: email 
+        },
         process.env.TOKEN_KEY,
         {
           expiresIn: process.env.TOKEN_KEY_EXPIRY,
@@ -48,7 +50,7 @@ const login = async (req, res)=> {
       Employee.update({token: token}, { where:{ id : employee.id } })
       // user
       req.session.token = token;
-      res.status(200).json(employee);
+      res.status(200).json({ first_name: employee.first_name, last_name: employee.last_name});
     }
     else{
         res.status(400).send("Invalid Credentials");
@@ -64,7 +66,7 @@ const profile = async (req, res) => {
       console.log(req.user);
       const employee = await Employee.findOne({ 
         where: {email: req.user.username},
-        attributes: { exclude: ['token', 'password'] },
+        attributes: { exclude: ['password', 'createdAt', 'updatedAt'] },
        });
       return res.status(200).send(employee);
   } catch (err) {
