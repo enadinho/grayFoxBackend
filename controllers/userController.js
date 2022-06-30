@@ -1,5 +1,7 @@
 const { regexpToText } = require('nodemon/lib/utils')
+const { Sequelize } = require('../models')
 const db = require('../models')
+const { getPagination, getPagingData } = require('./sequalizeUtility')
 
 const Cast = db.user
 const Employee = db.employee
@@ -23,6 +25,7 @@ const addCast = async(req, res) =>{
         experience: req.body.experience,
         birthday: req.body.birthday,
         email: req.body.email,
+        status: "pending",
         isActive: req.body.isActive ? req.body.isActive : false
     }
 
@@ -32,8 +35,63 @@ const addCast = async(req, res) =>{
 
 
 const getAllCasts = async (req, res) =>{
-    let casts = await Cast.findAll({})
-    res.status(200).send(casts)
+    const { page, size } = req.query;
+    const { limit, offset } = getPagination(page, size);
+    await Cast.findAndCountAll({
+        limit: limit, 
+        offset: offset,
+        attributes: { exclude: ['createdAt', 'updatedAt'] },
+    }).then(data => {
+        const response = getPagingData(data, page, limit);
+        res.send(response);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while retrieving casts."
+        });
+    });
+}
+
+
+const getAllStatusPendingCasts = async (req, res) =>{
+    const { page, size } = req.query;
+    const { limit, offset } = getPagination(page, size);
+    await Cast.findAndCountAll({
+        limit: limit, 
+        offset: offset,
+        where:  Sequelize.literal(`status='pending'`),
+        attributes: { exclude: ['createdAt', 'updatedAt'] },
+    }).then(data => {
+        const response = getPagingData(data, page, limit);
+        res.send(response);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while retrieving casts."
+        });
+    });
+}
+
+const getAllStatusAcceptedCasts = async (req, res) =>{
+    const { page, size } = req.query;
+    const { limit, offset } = getPagination(page, size);
+    await Cast.findAndCountAll({
+        limit: limit, 
+        offset: offset,
+        where:  Sequelize.literal(`status='accepted'`),
+        attributes: { exclude: ['createdAt', 'updatedAt'] },
+    }).then(data => {
+        const response = getPagingData(data, page, limit);
+        res.send(response);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while retrieving casts."
+        });
+    });
 }
 
 
@@ -65,6 +123,8 @@ const getActiveCast = async (req,res) =>{
 module.exports ={
     addCast,
     getAllCasts,
+    getAllStatusPendingCasts,
+    getAllStatusAcceptedCasts,
     getCast,
     updateCast,
     deleteCast,

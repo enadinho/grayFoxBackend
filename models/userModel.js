@@ -37,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         },
         image: {
-            type: DataTypes.STRING,
+            type: DataTypes.BLOB("long"),
             allowNull: false
         },
         bodytype: {
@@ -59,6 +59,11 @@ module.exports = (sequelize, DataTypes) => {
         birthday: {
             type: DataTypes.STRING,
             allowNull: false
+        },
+        status:{
+            type: DataTypes.ENUM("pending", "rejected", "accepted"),
+            allowNull: false,
+            defaultValue: "pending"
         },
         isActive:{
             type: DataTypes.BOOLEAN,

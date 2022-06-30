@@ -4,6 +4,8 @@ const router = require('express').Router()
 
 router.post('/addCast', castController.addCast)
 router.get('/allCasts', castController.getAllCasts)
+router.get('/allCasts/pending', castController.getAllStatusPendingCasts)
+router.get('/allCasts/accepted', castController.getAllStatusAcceptedCasts)
 router.get('/getCast/:id', castController.getCast)
 router.get('/activeCast', castController.getActiveCast)
 router.put('/updateCast/:id', castController.updateCast)

@@ -46,20 +46,61 @@ const testdata = async () => {
     db.employee.create({
         first_name: "Test", last_name: "User", email: "testuser@gmail.com", password: encryptedPassword, active: true
     })
+    db.employee.create({
+        first_name: "Test1", last_name: "User1", email: "testuser1@gmail.com", password: encryptedPassword, active: false
+    })
+    db.employee.create({
+        first_name: "Test2", last_name: "User2", email: "testuser2@gmail.com", password: encryptedPassword, active: true
+    })
+
+    let cast ={ firstname: "Cast", lastname: "Name", national: "sa", mobile: "0534334533", bodytype: "Fit", city: "Riyadh",
+        talent: "Talent", height: "180CM", weight: "75KG", workshops: "", gender: "M", image: "req.body.image",
+        experience: "There was a small one behind our house and it provided endless fun for me and my brothers and sisters.", 
+        birthday: "1991", email: "",status: "pending", isActive: true
+    }
+
+    db.user.create(cast);
+    cast.firstname="Cast Name1";
+    cast.lastname="Last Name1";
+    cast.national="in";
+    cast.bodytype="Marvelous";
+    cast.height="170CM"
+    db.user.create(cast);
+    cast.firstname="Cast Name2";
+    cast.lastname="Last Name2";
+    cast.national="lk";
+    db.user.create(cast);
+    cast.firstname="Cast Name3";
+    cast.lastname="Last Name3";
+    cast.national="in";
+    db.user.create(cast);
+    cast.firstname="Cast Name4";
+    cast.lastname="Last Name4";
+    cast.national="sa";
+    db.user.create(cast);
+    cast.status="accepted";
+    db.user.create(cast);
+    cast.status="rejected";
+    db.user.create(cast);
     // db.country.create({
     //     name: 'Saudi Arabia', iso2: 'SA', iso3: 'KSA', isActive: 1,
-    //     city: {
-    //         name: "Riyadh", status: 1
-    //     }
-    // }, {
-    //     include: [{
-    //       association: city,
-    //     }]
     // });
 
+    db.country.bulkCreate([
+        { name: 'Saudi Arabia', iso2: 'SA', iso3: 'KSA', isActive: 1 },
+        { name: 'United Arab Emirates', iso2: 'AE', iso3: 'UAE', isActive: 1 },
+      ]).then(() => console.log("Countries have been saved"));
+     
+    db.city.bulkCreate([
+    {  name: "Riyadh", status: 1, country_id: 1 },
+    {  name: "Jeddah", status: 1, country_id: 1 },
+    {  name: "Qassim", status: 1, country_id: 1 },
+    {  name: "Mekkah", status: 1, country_id: 1 },
+    ]).then(() => console.log("Countries have been saved"));  
     // db.city.create({
     //         name: "Riyadh", status: 1, country_id: 1
     // });
+
 };
 
 db.sequelize.sync( {force: true}) // force true will drop existing table data
