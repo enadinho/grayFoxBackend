@@ -66,10 +66,9 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: "pending"
         },
         isActive:{
-            type: DataTypes.BOOLEAN,
+            type: DataTypes.STRING,
             allowNull: false
         }
-        
     })
     
     return Cast

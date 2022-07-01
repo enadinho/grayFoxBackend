@@ -2,6 +2,7 @@ const { regexpToText } = require('nodemon/lib/utils')
 const { Sequelize } = require('../models')
 const db = require('../models')
 const { getPagination, getPagingData } = require('./sequalizeUtility')
+const path = require("path");
 
 const Cast = db.user
 const Employee = db.employee
@@ -36,21 +37,37 @@ const addCast = async(req, res) =>{
 
 const getAllCasts = async (req, res) =>{
     const { page, size } = req.query;
-    const { limit, offset } = getPagination(page, size);
-    await Cast.findAndCountAll({
-        limit: limit, 
-        offset: offset,
-        attributes: { exclude: ['createdAt', 'updatedAt'] },
-    }).then(data => {
-        const response = getPagingData(data, page, limit);
-        res.send(response);
-      })
-      .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Some error occurred while retrieving casts."
+
+    if(page && size){
+        const { limit, offset } = getPagination(page, size);
+        await Cast.findAndCountAll({
+            limit: limit, 
+            offset: offset,
+            attributes: { exclude: ['createdAt', 'updatedAt'] },
+        }).then(data => {
+            const response = getPagingData(data, page, limit);
+            res.send(response);
+        })
+        .catch(err => {
+            res.status(500).send({
+            message:
+                err.message || "Some error occurred while retrieving casts."
+            });
         });
-    });
+    }
+    else{
+        const casts = await Cast.findAll({ 
+            attributes: { exclude: ['createdAt', 'updatedAt'] }
+        }).then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+            message:
+                err.message || "Some error occurred while retrieving casts."
+            });
+        });
+    }
 }
 
 
@@ -101,12 +118,25 @@ const getCast = async (req,res) =>{
     res.status(200).send(cast)
 }
 
+const getProfileImage = async (req, res) =>{
+    let id = req.params.id;
+    // let cast = await Cast.findOne({where: {id: id}})
+    // console.log(`${__dirname}`);
+    return res.sendFile(path.join(`${__dirname}/../resources/static/img/profiles/` + id+".jpg"));
+}
+
 const updateCast = async (req,res) =>{
     let id = req.params.id
-    
     const cast = await Cast.update(req.body, {where: {id: id}})
     res.status(200).send(cast)
 }
+
+const patchCast = async (req,res) =>{
+    let id = req.params.id
+    const cast = await Cast.update(req.body, {where: {id: id}})
+    res.status(200).send(cast)
+}
+
 
 
 const deleteCast = async (req,res) =>{
@@ -128,5 +158,6 @@ module.exports ={
     getCast,
     updateCast,
     deleteCast,
-    getActiveCast
+    getActiveCast,
+    getProfileImage
 }

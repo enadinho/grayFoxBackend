@@ -6,7 +6,8 @@ const app = express()
 const cookieSession = require('cookie-session');
 
 var corOptions = {
-    origin: 'http://localhost:4200',
+    origin: ['http://localhost:4200',
+             'http://localhost:4201'],
     optionsSuccessStatus: 200,
     credentials: true
 }

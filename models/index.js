@@ -53,17 +53,17 @@ const testdata = async () => {
         first_name: "Test2", last_name: "User2", email: "testuser2@gmail.com", password: encryptedPassword, active: true
     })
 
-    let cast ={ firstname: "Cast", lastname: "Name", national: "sa", mobile: "0534334533", bodytype: "Fit", city: "Riyadh",
-        talent: "Talent", height: "180CM", weight: "75KG", workshops: "", gender: "M", image: "req.body.image",
+    let cast ={ firstname: "Anita", lastname: "Gabbission", national: "sa", mobile: "0534334533", bodytype: "Fit", city: "Riyadh",
+        talent: "Talent", height: "180CM", weight: "75KG", workshops: "", gender: "F", image: "req.body.image",
         experience: "There was a small one behind our house and it provided endless fun for me and my brothers and sisters.", 
-        birthday: "1991", email: "",status: "pending", isActive: true
+        birthday: "12/12/1990", email: "",status: "pending", isActive: true
     }
 
     db.user.create(cast);
     cast.firstname="Cast Name1";
     cast.lastname="Last Name1";
     cast.national="in";
-    cast.bodytype="Marvelous";
+    cast.bodytype="Athletic";
     cast.height="170CM"
     db.user.create(cast);
     cast.firstname="Cast Name2";
@@ -73,10 +73,12 @@ const testdata = async () => {
     cast.firstname="Cast Name3";
     cast.lastname="Last Name3";
     cast.national="in";
+    cast.gender="M"
     db.user.create(cast);
     cast.firstname="Cast Name4";
     cast.lastname="Last Name4";
     cast.national="sa";
+    cast.gender="F"
     db.user.create(cast);
     cast.status="accepted";
     db.user.create(cast);
