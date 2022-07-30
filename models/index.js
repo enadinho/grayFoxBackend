@@ -54,7 +54,7 @@ const testdata = async () => {
     })
 
     let cast ={ firstname: "Anita", lastname: "Gabbission", national: "sa", mobile: "0534334533", bodytype: "Fit", city: "Riyadh",
-        talent: "Talent", height: "180CM", weight: "75KG", workshops: "", gender: "F", image: "req.body.image",
+        talent: "Talent", height: "180CM", weight: "75KG", workshops: "", gender: "F", image: "1",
         experience: "There was a small one behind our house and it provided endless fun for me and my brothers and sisters.", 
         birthday: "12/12/1990", email: "",status: "pending", isActive: true
     }
@@ -65,20 +65,24 @@ const testdata = async () => {
     cast.national="in";
     cast.bodytype="Athletic";
     cast.height="170CM"
+    cast.image="middleware/resources/static/img/profiles/1.jpg"
     db.user.create(cast);
     cast.firstname="Cast Name2";
     cast.lastname="Last Name2";
     cast.national="lk";
+    cast.image="middleware/resources/static/img/profiles/2.jpg"
     db.user.create(cast);
     cast.firstname="Cast Name3";
     cast.lastname="Last Name3";
     cast.national="in";
     cast.gender="M"
+    cast.image="middleware/resources/static/img/profiles/3.jpg"
     db.user.create(cast);
     cast.firstname="Cast Name4";
     cast.lastname="Last Name4";
     cast.national="sa";
     cast.gender="F"
+    cast.image="middleware/resources/static/img/profiles/4.jpg"
     db.user.create(cast);
     cast.status="accepted";
     db.user.create(cast);

@@ -1,6 +1,7 @@
 const express = require('express')
 const cors = require('cors')
 const dotenv = require('dotenv');
+const bodyparser = require('body-parser')
 dotenv.config();
 const app = express()
 const cookieSession = require('cookie-session');
@@ -15,8 +16,8 @@ var corOptions = {
 
 //middleware
 app.use(cors(corOptions))
-app.use(express.json())
-app.use(express.urlencoded({extended: true}))
+app.use(bodyparser.json())
+app.use(bodyparser.urlencoded({extended: false}))
 app.use(
     cookieSession({
       name: "grayfox-session",

@@ -4,6 +4,7 @@ const db = require('../models')
 const { getPagination, getPagingData, getPagingAndFilteredData } = require('./sequalizeUtility')
 const path = require("path");
 const { Op } = require('sequelize');
+resolve = require('path').resolve
 
 const Cast = db.user
 const Employee = db.employee
@@ -164,9 +165,10 @@ const getCast = async (req,res) =>{
 
 const getProfileImage = async (req, res) =>{
     let id = req.params.id;
-    // let cast = await Cast.findOne({where: {id: id}})
+    let cast = await Cast.findOne({where: {id: id}})
+    console.log("ImagePath: "+cast.image)
     // console.log(`${__dirname}`);
-    return res.sendFile(path.join(`${__dirname}/../resources/static/img/profiles/` + id+".jpg"));
+    return res.sendFile(resolve(cast.image));
 }
 
 const updateCast = async (req,res) =>{
@@ -195,25 +197,20 @@ const getActiveCast = async (req,res) =>{
 }
 
 const uploadProfileImage = async (req, res) => {
-    console.log(req)
+    // console.log(req)
+    const file = req.file
     try {
-      console.log(req.file);
-      if (req.file == undefined) {
+      console.log(file);
+      if (file== undefined) {
         return res.send(`You must select a file.`);
       }
-      Image.create({
-        type: req.file.mimetype,
-        name: req.file.originalname,
-        data: fs.readFileSync(
-          __basedir + "/resources/static/assets/uploads/" + req.file.filename
-        ),
-      }).then((image) => {
-        fs.writeFileSync(
-          __basedir + "/resources/static/assets/tmp/" + image.name,
-          image.data
-        );
-        return res.send(`File has been uploaded.`);
-      });
+      else{
+        res.status(200).send({
+          statusCode: 200,
+          message: 'Image successfully uploaded',
+          uploadedFile: file
+        })
+      }
     } catch (error) {
       console.log(error);
       return res.send(`Error when trying upload images: ${error}`);
