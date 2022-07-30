@@ -1,3 +1,4 @@
+
 module.exports = (sequelize, DataTypes) => {
     const Country = sequelize.define('country', {
         name: {

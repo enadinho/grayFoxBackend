@@ -1,15 +1,16 @@
 const { regexpToText } = require('nodemon/lib/utils')
 const { Sequelize } = require('../models')
 const db = require('../models')
-const { getPagination, getPagingData } = require('./sequalizeUtility')
+const { getPagination, getPagingData, getPagingAndFilteredData } = require('./sequalizeUtility')
 const path = require("path");
+const { Op } = require('sequelize');
 
 const Cast = db.user
 const Employee = db.employee
 
 
-const addCast = async(req, res) =>{
-    let info ={
+const addCast = async(req, res) => {
+    let info = {
         firstname: req.body.firstname,
         lastname: req.body.lastname,
         national: req.body.national,
@@ -37,8 +38,6 @@ const addCast = async(req, res) =>{
 
 const getAllCasts = async (req, res) =>{
     const { page, size } = req.query;
-
-    if(page && size){
         const { limit, offset } = getPagination(page, size);
         await Cast.findAndCountAll({
             limit: limit, 
@@ -54,20 +53,6 @@ const getAllCasts = async (req, res) =>{
                 err.message || "Some error occurred while retrieving casts."
             });
         });
-    }
-    else{
-        const casts = await Cast.findAll({ 
-            attributes: { exclude: ['createdAt', 'updatedAt'] }
-        }).then(data => {
-            res.send(data);
-        })
-        .catch(err => {
-            res.status(500).send({
-            message:
-                err.message || "Some error occurred while retrieving casts."
-            });
-        });
-    }
 }
 
 
@@ -100,6 +85,34 @@ const getAllStatusAcceptedCasts = async (req, res) =>{
         where:  Sequelize.literal(`status='accepted'`),
         attributes: { exclude: ['createdAt', 'updatedAt'] },
     }).then(data => {
+      const response = getPagingData(data, page, limit);
+        res.send(response);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while retrieving casts."
+        });
+    });
+}
+
+const getAllCastsWithFilters = async (req, res) =>{
+    const { page, size } = req.query;
+    const filters=req.body;
+    let statement="";
+    filters.forEach(filter => {
+        console.log(filter.key+":"+filter.value)
+        statement=statement + `${filter.key}='${filter.value}'`+",";
+    });
+    statement=statement.substring(0, statement.length-1);
+    console.log(statement)
+    const { limit, offset } = getPagination(page, size);
+    await Cast.findAndCountAll({
+        limit: limit, 
+        offset: offset,
+        where: Sequelize.literal(statement),
+        attributes: { exclude: ['createdAt', 'updatedAt'] },
+    }).then(data => {
         const response = getPagingData(data, page, limit);
         res.send(response);
       })
@@ -111,6 +124,37 @@ const getAllStatusAcceptedCasts = async (req, res) =>{
     });
 }
 
+
+
+const getCastSearchParams = async (req, res) =>{
+    console.log(req.query);
+
+    let searchKey=Object.keys(req.query)[0];
+    let searhValue=Object.values(req.query)[0];
+    const { page, size } = req.query;
+    
+    let statement="";
+    if(Object.keys(req.query).length>2)
+      statement=`${searchKey} like '%${searhValue}%'`;
+
+    console.log(statement)
+    const { limit, offset } = getPagination(page, size);
+    await Cast.findAndCountAll({
+        limit: limit, 
+        offset: offset,
+        where: Sequelize.literal(statement),
+        attributes: { exclude: ['createdAt', 'updatedAt'] },
+    }).then(data => {
+        const response = getPagingAndFilteredData(data, page, limit);
+        res.send(response);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while retrieving casts."
+        });
+    });
+}
 
 const getCast = async (req,res) =>{
     let id = req.params.id
@@ -150,14 +194,43 @@ const getActiveCast = async (req,res) =>{
     res.status(200).send(casts)
 }
 
+const uploadProfileImage = async (req, res) => {
+    console.log(req)
+    try {
+      console.log(req.file);
+      if (req.file == undefined) {
+        return res.send(`You must select a file.`);
+      }
+      Image.create({
+        type: req.file.mimetype,
+        name: req.file.originalname,
+        data: fs.readFileSync(
+          __basedir + "/resources/static/assets/uploads/" + req.file.filename
+        ),
+      }).then((image) => {
+        fs.writeFileSync(
+          __basedir + "/resources/static/assets/tmp/" + image.name,
+          image.data
+        );
+        return res.send(`File has been uploaded.`);
+      });
+    } catch (error) {
+      console.log(error);
+      return res.send(`Error when trying upload images: ${error}`);
+    }
+  }
+
 module.exports ={
     addCast,
     getAllCasts,
+    getAllCastsWithFilters,
+    getCastSearchParams,
     getAllStatusPendingCasts,
     getAllStatusAcceptedCasts,
     getCast,
     updateCast,
     deleteCast,
     getActiveCast,
-    getProfileImage
+    getProfileImage,
+    uploadProfileImage
 }
