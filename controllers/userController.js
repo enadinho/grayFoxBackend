@@ -32,8 +32,14 @@ const addCast = async(req, res) => {
         isActive: req.body.isActive ? req.body.isActive : false
     }
 
-    const cast = await Cast.create(info)
-    res.status(200).send(cast)
+    let cast = await Cast.findOne({where: {email: info.email}})
+    if(!cast){
+      cast=await Cast.create(info)
+      res.status(200).send(cast)
+    }
+    else{
+      res.status(500).send("Cast Already Exists")
+    }
 }
 
 
