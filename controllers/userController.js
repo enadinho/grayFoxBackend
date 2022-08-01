@@ -15,6 +15,7 @@ const addCast = async(req, res) => {
         firstname: req.body.firstname,
         lastname: req.body.lastname,
         national: req.body.national,
+        countrycode: req.body.countrycode,
         mobile: req.body.mobile,
         bodytype: req.body.bodytype,
         mobile: req.body.mobile,

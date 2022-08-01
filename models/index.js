@@ -43,49 +43,59 @@ const testdata = async () => {
     
     encryptedPassword = await bcryptjs.hash("test@123", 10);
 
+    adminPassword = await bcryptjs.hash("admin@123", 10);
+
+
     db.employee.create({
         first_name: "Test", last_name: "User", email: "testuser@gmail.com", password: encryptedPassword, active: true
     })
     db.employee.create({
-        first_name: "Test1", last_name: "User1", email: "testuser1@gmail.com", password: encryptedPassword, active: false
+        first_name: "Admin", last_name: "User", email: "adminuser@gmail.com", password: adminPassword, active: false
     })
     db.employee.create({
         first_name: "Test2", last_name: "User2", email: "testuser2@gmail.com", password: encryptedPassword, active: true
     })
 
-    let cast ={ firstname: "Anita", lastname: "Gabbission", national: "sa", mobile: "0534334533", bodytype: "Fit", city: "Riyadh",
+    let cast ={ firstname: "Anita", lastname: "Gabbission", national: "Saudi Arabia", countrycode: "Saudi Arabia", mobile: "0534334533", bodytype: "Fit", city: "Riyadh",
         talent: "Talent", height: "180CM", weight: "75KG", workshops: "", gender: "F", image: "1",
         experience: "There was a small one behind our house and it provided endless fun for me and my brothers and sisters.", 
         birthday: "12/12/1990", email: "",status: "pending", isActive: true
     }
-
+    cast.image="middleware/resources/static/img/profiles/1.jpg"
+    cast.countrycode="sa"
     db.user.create(cast);
     cast.firstname="Cast Name1";
     cast.lastname="Last Name1";
-    cast.national="in";
+    cast.national="India";
+    cast.countrycode="in"
     cast.bodytype="Athletic";
     cast.height="170CM"
-    cast.image="middleware/resources/static/img/profiles/1.jpg"
+    cast.image="middleware/resources/static/img/profiles/2.jpg"
     db.user.create(cast);
     cast.firstname="Cast Name2";
     cast.lastname="Last Name2";
-    cast.national="lk";
-    cast.image="middleware/resources/static/img/profiles/2.jpg"
+    cast.national="Sri Lanka";
+    cast.countrycode="lk"
+    cast.image="middleware/resources/static/img/profiles/3.jpg"
     db.user.create(cast);
     cast.firstname="Cast Name3";
     cast.lastname="Last Name3";
-    cast.national="in";
+    cast.national="India";
+    cast.countrycode="in"
     cast.gender="M"
-    cast.image="middleware/resources/static/img/profiles/3.jpg"
+    cast.image="middleware/resources/static/img/profiles/4.jpg"
     db.user.create(cast);
     cast.firstname="Cast Name4";
     cast.lastname="Last Name4";
-    cast.national="sa";
+    cast.national="Saudi Arabia";
+    cast.countrycode="sa"
     cast.gender="F"
-    cast.image="middleware/resources/static/img/profiles/4.jpg"
+    cast.image="middleware/resources/static/img/profiles/5.jpg"
     db.user.create(cast);
+    cast.image="middleware/resources/static/img/profiles/6.jpg"
     cast.status="accepted";
     db.user.create(cast);
+    cast.image="middleware/resources/static/img/profiles/7.jpg"
     cast.status="rejected";
     db.user.create(cast);
     // db.country.create({
@@ -93,8 +103,8 @@ const testdata = async () => {
     // });
 
     db.country.bulkCreate([
-        { name: 'Saudi Arabia', iso2: 'SA', iso3: 'KSA', isActive: 1 },
-        { name: 'United Arab Emirates', iso2: 'AE', iso3: 'UAE', isActive: 1 },
+        { name: 'Saudi Arabia', iso2: 'sa', iso3: 'ksa', isActive: 1 },
+        { name: 'United Arab Emirates', iso2: 'ae', iso3: 'uae', isActive: 1 },
       ]).then(() => console.log("Countries have been saved"));
      
     db.city.bulkCreate([

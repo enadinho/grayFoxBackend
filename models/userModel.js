@@ -12,6 +12,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
+        countrycode: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
         mobile: {
             type: DataTypes.STRING,
             allowNull: false
